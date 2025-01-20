@@ -21,7 +21,7 @@ jobs:
           distribution: "adopt"
           cache: "gradle"
 
-      - name: Change wrapper permissions
+      - name: Change wrapper Permissions
         run: chmod +x ./android/gradlew
       
       - name: Validate Gradle Wrapper
