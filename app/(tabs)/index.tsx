@@ -1,11 +1,65 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, Platform, TextInput, useColorScheme } from 'react-native';
+import { useState } from 'react';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
+const signImages = {
+  a: require('../../assets/sign-language/alphabet/a.jpg'),
+  b: require('../../assets/sign-language/alphabet/b.jpg'),
+  c: require('../../assets/sign-language/alphabet/c.jpg'),
+  d: require('../../assets/sign-language/alphabet/d.jpg'),
+  e: require('../../assets/sign-language/alphabet/e.jpg'),
+  f: require('../../assets/sign-language/alphabet/f.jpg'),
+  g: require('../../assets/sign-language/alphabet/g.jpg'),
+  h: require('../../assets/sign-language/alphabet/h.jpg'),
+  i: require('../../assets/sign-language/alphabet/i.jpg'),
+  j: require('../../assets/sign-language/alphabet/j.jpg'),
+  k: require('../../assets/sign-language/alphabet/k.jpg'),
+  l: require('../../assets/sign-language/alphabet/l.jpg'),
+  m: require('../../assets/sign-language/alphabet/m.jpg'),
+  n: require('../../assets/sign-language/alphabet/n.jpg'),
+  o: require('../../assets/sign-language/alphabet/o.jpg'),
+  p: require('../../assets/sign-language/alphabet/p.jpg'),
+  q: require('../../assets/sign-language/alphabet/q.jpg'),
+  r: require('../../assets/sign-language/alphabet/r.jpg'),
+  s: require('../../assets/sign-language/alphabet/s.jpg'),
+  t: require('../../assets/sign-language/alphabet/t.jpg'),
+  u: require('../../assets/sign-language/alphabet/u.jpg'),
+  v: require('../../assets/sign-language/alphabet/v.jpg'),
+  w: require('../../assets/sign-language/alphabet/w.jpg'),
+  x: require('../../assets/sign-language/alphabet/x.jpg'),
+  y: require('../../assets/sign-language/alphabet/y.jpg'),
+  z: require('../../assets/sign-language/alphabet/z.jpg'),
+};
+
 export default function HomeScreen() {
+  const [text, setText] = useState('');
+  const colorScheme = useColorScheme();
+
+  const renderSignLanguage = (input: string) => {
+    return input
+      .toLowerCase()
+      .split('')
+      .map((char, index) => {
+        if (char >= 'a' && char <= 'z' && signImages[char]) {
+          return (
+            <Image
+              key={index}
+              source={signImages[char]}
+              style={styles.signImage}
+              accessibilityLabel={`Sign for letter ${char}`}
+            />
+          );
+        }
+        return (
+          <ThemedView key={index} style={styles.spacer} />
+        );
+      });
+  };
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -16,39 +70,25 @@ export default function HomeScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
+        <ThemedText type="title">Sign Language Converter</ThemedText>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
+
+      <ThemedView style={styles.inputContainer}>
+        <TextInput
+          style={[
+            styles.textInput,
+            { color: colorScheme === 'dark' ? '#fff' : '#000' }
+          ]}
+          value={text}
+          onChangeText={setText}
+          placeholder="Type something..."
+          placeholderTextColor={colorScheme === 'dark' ? '#999' : '#666'}
+          multiline
+        />
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
+
+      <ThemedView style={styles.signContainer}>
+        {renderSignLanguage(text)}
       </ThemedView>
     </ParallaxScrollView>
   );
@@ -70,5 +110,35 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: 'absolute',
+  },
+  signImage: {
+    height: 80,
+    width: 80,
+    resizeMode: 'contain',
+  },
+  signContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    padding: 16,
+    justifyContent: 'center',
+  },
+  spacer: {
+    width: 40,
+    height: 80,
+  },
+  inputContainer: {
+    padding: 16,
+    marginBottom: 8,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    minHeight: 100,
+    textAlignVertical: 'top',
+    backgroundColor: 'transparent',
   },
 });
